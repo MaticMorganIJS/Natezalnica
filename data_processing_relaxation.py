@@ -40,5 +40,3 @@ if __name__ == "__main__":
         file.close()
 
     draw_forces()
-
-
