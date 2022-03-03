@@ -1,37 +1,26 @@
 # -*- coding: utf-8 -*-
 """
-Created on Mon Feb  21 10:13:02 2022
+Created on Thu Mar  3 15:18:16 2022
 
 @author: Matic
 """
+
 
 import os
 import matplotlib.pyplot as plt
 
 
-# returns the additional relaxation time of consecutive repetitions in seconds as a list of floats
-def extract_additional_relaxations(file):
-    additional_relaxations = []
-    i = 0
-    while (i < len(vsebina)):
-        line_temp = vsebina[i+2]
-        line_temp = line_temp.replace('\n', '')
-        additional_relaxations.append(float(line_temp))
-        i += 4
-    
-    return additional_relaxations
-
-
-# returns either the upper or the lower forces of consecutive repetitions in miligrams as a list of floats
-# force_type is either 'upper' or 'lower'.
-def extract_forces(file, force_type):
+def ExtractForces(file, force_type):
     upper_forces = []
     lower_forces = []
-    i = 0
-    while(i < len(vsebina)):
-        upper_forces.append(float(vsebina[i+1].split()[0]))
-        lower_forces.append(float(vsebina[i+3].split()[0]))
-        i += 4
+    for idx, line in enumerate(vsebina):
+        if line[0] == '#':
+            continue
+        else:
+            if (idx % 2 == 0):
+                upper_forces.append(float(line.split('\t')[0]))
+            else:
+                lower_forces.append(float(line.split('\t')[0]))
     
     if (force_type == 'upper'):
         return upper_forces
@@ -39,50 +28,46 @@ def extract_forces(file, force_type):
         return lower_forces
 
 
-# returns either the upper times, lower times or oscillation times of consecutive repetitions in seconds as a list of floats
-def extract_times(file, time_type):
+def ExtractTimes(file, time_type):
     upper_times = []
     lower_times = []
-    oscillation_times = []
-    i = 0
-    while(i < len(vsebina)):
-        upper_times.append(float(vsebina[i+1].split()[1]))
-        lower_times.append(float(vsebina[i+3].split()[1]))
-        i += 4
-    for j in range(len(upper_times)):
-        oscillation_times.append(upper_times[j] - upper_times[j-1])
-    oscillation_times.pop(0)
+    for idx, line in enumerate(vsebina):
+        if line[0] == '#':
+            continue
+        else:
+            if (idx % 2 == 0):
+                upper_times.append(float(line.split('\t')[1]))
+            else:
+                lower_times.append(float(line.split('\t')[1]))
     
     if (time_type == 'upper'):
         return upper_times
-    elif (time_type == 'lower'):
-        return lower_times
     else:
-        return oscillation_times
-
-
-# returns either the upper or lower lengths of consecutive repetitions in milimeter as a list of floats
-def extract_lengths(file, length_type):
+        return lower_times
+    
+def ExtractLengths(file, time_type):
     upper_lengths = []
     lower_lengths = []
-    i = 0
-    while(i < len(vsebina)):
-        upper_lengths.append(float(vsebina[i+1].split()[2]))
-        lower_lengths.append(float(vsebina[i+3].split()[2]))
-        i += 4
-        
-    if (length_type == 'upper'): 
+    for idx, line in enumerate(vsebina):
+        if line[0] == '#':
+            continue
+        else:
+            if (idx % 2 == 0):
+                upper_lengths.append(float(line.split('\t')[2]))
+            else:
+                lower_lengths.append(float(line.split('\t')[2]))
+    
+    if (time_type == 'upper'):
         return upper_lengths
-    else:    
+    else:
         return lower_lengths
-
 
 # functions that calculate certain values
 
 # strain value coresponding to the %, area in mm^2, returns value in GPa
-def calculate_youngs_moduli(file, strain, area):
+def CalculateYoungModulus(file, strain, area):
     moduli = []
-    forces = extract_forces(file, 'upper')
+    forces = ExtractForces(file, 'upper')
     for force in forces:
         moduli.append( (0.001 * force) / ( area * strain ) )
     
@@ -176,8 +161,3 @@ if __name__ == "__main__":
     draw_additional_relaxation_time()
     draw_oscillation_time()
     draw_young_modulus()
-
-
-
-
-
