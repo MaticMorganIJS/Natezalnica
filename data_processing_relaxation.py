@@ -61,15 +61,15 @@ def DrawForces(force_type):
     if (force_type == 'all'):
         
         fig, ax = plt.subplots()
-        ax.set_title('Force with respect to time')
-        plt.xlabel('Time [ 0.1 s ]')
+        # ax.set_title('Force with respect to time')
+        plt.xlabel('Time [ s ]')
         plt.ylabel('Force [ mg ]')
         xs = np.linspace( 0, len(ExtractForces(file, 'all')) / 10, num=len(ExtractForces(file, 'all')) )
         plt.scatter(xs, ExtractForces(file, 'all'), s=1)
     
     else:
         fig, ax = plt.subplots()
-        ax.set_title('Forces during relaxation with respect to time')
+        # ax.set_title('Forces during relaxation with respect to time')
         plt.xlabel('Time [ s ]')
         plt.ylabel('Force [ mg ]')
         
@@ -88,8 +88,7 @@ def DrawForces(force_type):
         tau = 1 / t
         print(f" Tau_{force_type} = {tau} s")
         
-        return tau
-       
+        return tau   
 
 
 if __name__ == "__main__":
@@ -98,7 +97,7 @@ if __name__ == "__main__":
     all_lower_taus = []
     
      # processing measurements from all files in the specified directory
-    for entry in os.scandir(r'C:\Users\Matic\Documents\aging\meritve_aging\measurements_to_be_processed'):
+    for entry in os.scandir(r'C:\Users\Matic\Documents\aging\meritve_aging\measurements_to_be_processed\relaxation'):
         file = open(entry.path)
         vsebina = file.readlines()
         
